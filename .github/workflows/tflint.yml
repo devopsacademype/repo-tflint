@@ -4,16 +4,34 @@ on:
     branches:
       - main
 jobs:
-  tflint:
-    name: check source code
+  tflint-checks:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@master
+    
+# Checkout Repository
+    - name : Check out Git Repository
+      uses: actions/checkout@v3  
+    
+# TFLint - Terraform Check
+    - uses: actions/cache@v2
+      name: Cache plugin dir
+      with:
+        path: ~/.tflint.d/plugins
+        key: ${{ matrix.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
 
-    - name: Setup TFLint
-      uses: docker://wata727/tflint:latest
-
+    - uses: terraform-linters/setup-tflint@v2
+      name: Setup TFLint
+      with:
+        github_token: ${{ secrets.CI_GITHUB_TOKEN }}
+        
+# Print TFLint version
+    - name: Show version
+      run: tflint --version
+    
+# Install plugins
+    - name: Init TFLint
+      run: tflint --init
+    
+# Run tflint command in each directory recursively # use --force if you want to continue with workflow although errors are there
     - name: Run TFLint
-      uses: tflint
+      run: tflint -f compact --recursive  
