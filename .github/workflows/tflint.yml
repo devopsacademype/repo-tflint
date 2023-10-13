@@ -7,5 +7,13 @@ jobs:
   tflint:
     name: check source code
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@master
+    - name: Checkout Code
+      uses: actions/checkout@master
+
+    - name: Setup TFLint
+      uses: docker://wata727/tflint:latest
+
+    - name: Run TFLint
+      uses: tflint
