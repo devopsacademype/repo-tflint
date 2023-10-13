@@ -1,0 +1,11 @@
+name: TFLint Static Analysis
+on:
+  push:
+    branches:
+      - main
+jobs:
+  tflint:
+    name: check source code
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
