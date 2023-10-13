@@ -1,0 +1,2 @@
+# repo-tflint
+pipeline tflint
